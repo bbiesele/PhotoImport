@@ -63,6 +63,8 @@ usage() {
             --trace           TRACE DEBUG INFO WARN ERROR DEBUG FATAL
             "OFF
 EOF
+
+
 }
 
 prep_log () {
