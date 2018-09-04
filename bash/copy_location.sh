@@ -36,7 +36,7 @@ main() {
         exit 0
     fi
 #   create output directory if needed
-    [[ -d "$DESTINATION" ]] || mkdir -p "${DESTINATION}"
+    [[ -d "${DESTINATION}" ]] || mkdir -p "${DESTINATION}"
 #
     logger_info "START Input $SOURCE, Destination $DESTINATION Trace $TRACELEVEL $(date "+%Y_%m_%d %R:%S")"
 #   So files are copied from SOURCE to a directory in /tmp to INBOUND
@@ -45,10 +45,9 @@ main() {
 #       NOTE options on the copy will vary by OS -a is OS X
    cp -av "${SOURCE}" /tmp/$$/ | logger_info
    mv -nv /tmp/$$ $DESTINATION  | logger_info
-#  #   cp -lsr --backup=true
 #
-    # remove the file in /tmp if needed mv will if on the same drive
-    [[ -d /tmp/$$ ]] || rm -r /tmp/$$
+# remove the file in /tmp if needed mv will if on the same drive
+    [[ -d /tmp/$$ ]] && rm -rv /tmp/$$ | logger_info
     logger_info "DONE  $__SCRIPT $@ $(date "+%Y_%m_%d %R:%S")"
 }
 

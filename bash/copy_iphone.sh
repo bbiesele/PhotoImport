@@ -10,6 +10,16 @@
 # usage:
 # copy_iphone dest_external_drive WHO
 # Destination is the location of the external drive
+#  TODO locate the directory via lsusb equivalent
+if [[ $OSTYPE = darwin* ]]
+then
+  echo "Not available for $OSTYPE, use android_file_transfer instead with copy_location"
+#  note make sure use USB device for file transfer is checked
+#  if not aft will whine close it and check file transfer, that should open a working copy
+#  this works fine in linux but Apple doens't support lsusb
+  exit 1001
+fi
+
 DESTINATION=$1
 WHO=$(echo "$2" | tr a-z A-Z)
 CONTROL=$( dirname $0)

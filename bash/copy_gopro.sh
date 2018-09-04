@@ -11,13 +11,26 @@
 
 # Usage scripts/copy_gopro.sh external_disk_drive who
 
-#. /Users/william/scripts/PhotosInbound/InboundENV.sh
-# usage:
-# CopyMedia dest_external_drive WHO
-# Destination is the location of the external drive
+#./Users/william/scripts/PhotosInbound/InboundENV.sh
+#usage:
+#CopyMedia dest_external_drive WHO
+#  TODO
+#    Careful - implementation dependent
+#    use $OSTYPE to determine os and thus location
+[[ $OSTYPE = "linux_gnu" ]] || $GOPRO_DIR="$XDG_RUNTIME_DIR/gvfs/*"
+#  TODO locate the directory via lsusb equivalent
+if [[ $OSTYPE = darwin* ]]
+then
+  echo "Not available for $OSTYPE, use copy_sd instead or copy_location"
+  exit 1001
+fi
+
+#Destination is the location of the external drive
 DESTINATION=$1
+# who is a user tag identifing the photographer
 WHO=$(echo "$2" | tr a-z A-Z)
-CONTROL=$( dirname $0)
+# refs from the command line
+#CONTROL=$( dirname $0)
 SCRIPT=$( basename $0 )
 DATE=$(date "+%Y_%m_%d")
 TIMESTAMP=$(date "+%Y_%m_%d %R:%S")
@@ -42,8 +55,7 @@ echo "$INBOUND " | tee -a $LOGFILE
 [[ -d "$INBOUND" ]] || mkdir -p "$INBOUND"
 
 # do the copy
-# someday when we can figure out device to file stuff
-# for now just prompt where to drag and drop to
+
 cd  $XDG_RUNTIME_DIR/gvfs/*
 # assumes only one such device
 cd DCIM
