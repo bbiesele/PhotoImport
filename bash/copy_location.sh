@@ -37,12 +37,9 @@ main() {
 #   So files are copied from SOURCE to a directory in /tmp to INBOUND
 #       this is to allow graceful termination actions
 #       and to avoid problems with folder actions being called before all files are copied
-#       NOTE options on the copy will vary by OS -a is OS X
-   cp -av "${SOURCE}" /tmp/$$/ | logger_info
-   mv -nv /tmp/$$ $DESTINATION  | logger_info
-#
-# remove the file in /tmp if needed mv will if on the same drive
-    [[ -d /tmp/$$ ]] && rm -rv /tmp/$$ | logger_info
+
+    move_to_destination
+# fini
     logger_info "DONE  $__SCRIPT $@ $(date "+%Y_%m_%d %R:%S")"
 }
 
@@ -67,7 +64,6 @@ prep_log () {
 
     # Load log4sh (disabling properties file warning) and clear the default
     # configuration.
-    LOG4SH_CONFIGURATION='none' . $__LOGGER_DIRECTORY/log4sh
     log4sh_resetConfiguration
 
     # Set the global logging level to INFO.
@@ -78,7 +74,6 @@ prep_log () {
             "INFO")           logger_setLevel INFO;;
             "WARN")           logger_setLevel WARN;;
             "ERROR")          logger_setLevel TRACE;;
-            "DEBUG")          logger_setLevel DEBUG;;
             "FATAL")          logger_setLevel FATAL;;
             "OFF")            logger_setLevel OFF;;
     esac
@@ -130,6 +125,24 @@ cmdline() {
              ;;
         esac
     done
+    return 0
+}
+
+# ########################
+#
+# os dependent move
+#
+move_to_destination () {
+    mkdir "/tmp/$$"
+    # the options to cp and mv are os dependent these are defined in the copy_properties.sh file
+    logger_info "$__CP $SOURCE to /tmp/$$"
+    $__CP "${SOURCE}" /tmp/$$/ | logger_debug
+    logger_info "$__MV /tmp/$$ to $DESTINATION"
+    $__MV /tmp/$$ ${DESTINATION}  | logger_debug
+    if [[ -d /tmp/$$ ]]
+    then
+        rm -rv /tmp/$$ | logger_trace
+    fi
     return 0
 }
 

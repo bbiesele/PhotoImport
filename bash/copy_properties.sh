@@ -19,10 +19,13 @@ DESTINATION="./"
 if [[ "$OSTYPE" =~ ^darwin ]]; then
     readonly LOGGER_DIRECTORY="/Users/william/PycharmProjects/PhotoLoad/log4sh"
     LOG4SH_CONFIGURATION='none' . $LOGGER_DIRECTORY/log4sh
-
+    readonly __CP='cp -av'
+    readonly __MV='mv -nv'
 elif [[ "$OSTYPE" =~ ^linux ]]; then
     readonly LOGGER_DIRECTORY="/home/william/PycharmProjects/log4sh-1.4.2/src/shell"
     LOG4SH_CONFIGURATION='none' . $LOGGER_DIRECTORY/log4sh
+    readonly __CP='cp -av'
+    readonly __MV='cp -nupR'
 else
     echo "Fatal error unknown OS $__OS"
     exit -1
