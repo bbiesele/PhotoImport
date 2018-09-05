@@ -8,15 +8,8 @@
 # #######################################################
 #
 # Globals
-readonly __DATE=$(date "+%Y_%m_%d")
-readonly __TIMESTAMP=$(date "+%Y_%m_%d %R:%S")
-readonly __CONTROL=$( dirname $0)
 readonly __SCRIPT=$( basename $0 )
-#readonly __LOGFILE="/Users/william/Pictures/Logs/$__SCRIPT-$__DATE-$$.log"
-readonly __LOGFILE=STDERR
-readonly __LOGGER_DIRECTORY="/Users/william/PycharmProjects/PhotoLoad/log4sh"
-TRACELEVEL="INFO"
-DESTINATION="./"
+readonly __CONTROL=$( dirname $0)
 
 
 main() {
@@ -24,6 +17,8 @@ main() {
 #
 # the heart of the matter, called from below
 #
+#   source the project common
+    . $__CONTROL/copy_properties.sh
 #   parse the arguments
     cmdline "$@"
 #   setup the logging
