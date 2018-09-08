@@ -11,14 +11,15 @@
 readonly __SCRIPT=$( basename $0 )
 readonly __CONTROL=$( dirname $0)
 
-
+. $__CONTROL/copy_properties.sh
+#
 main() {
 # #######################################################
 #
 # the heart of the matter, called from below
 #
 #   source the project common
-    . $__CONTROL/copy_properties.sh
+#    . $__CONTROL/copy_properties.sh
 #   parse the arguments
     cmdline "$@"
 #   setup the logging
@@ -56,32 +57,6 @@ usage() {
             "OFF
 EOF
 
-
-}
-
-prep_log () {
-  # prepare for logging
-
-    # Load log4sh (disabling properties file warning) and clear the default
-    # configuration.
-    log4sh_resetConfiguration
-
-    # Set the global logging level to INFO.
-    case "$TRACELEVEL" in
-            #translate --gnu-long-options to -g (short options)
-            "TRACE")          logger_setLevel TRACE;;
-            "DEBUG")          logger_setLevel DEBUG;;
-            "INFO")           logger_setLevel INFO;;
-            "WARN")           logger_setLevel WARN;;
-            "ERROR")          logger_setLevel TRACE;;
-            "FATAL")          logger_setLevel FATAL;;
-            "OFF")            logger_setLevel OFF;;
-    esac
-    logger_addAppender stderr
-    appender_setType stderr FileAppender
-    appender_file_setFile stderr $__LOGFILE
-    appender_activateOptions stderr
-    logger_debug "Trace $TRACELEVEL"
 
 }
 
