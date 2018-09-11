@@ -13,6 +13,8 @@ readonly __TIMESTAMP=$(date "+%Y_%m_%d %R:%S")
 readonly __LOGFILE=STDERR
 readonly __OS=$OSTYPE
 readonly __INBOUND="/Users/william/Documents/GitHub/PhotoImport/PhotoImport/TestData/Inbound/"
+readonly __BKUP_INBOUND="/Volumes/PhotoBkup/Loads/TestData/Inbound/"
+readonly prompt_title="Photo Import"
 TRACELEVEL="INFO"
 DESTINATION="./"
 
@@ -42,6 +44,60 @@ prep_log () {
 
 }
 
+info_box () {
+#   popup an info box with OK / CANCEL buttons
+#   $1 Dialog text
+    our_value=$(osascript <<EOT
+    try
+        set userCanceled to false
+	    tell app "System Events"
+		    display dialog "$1" with icon 2 with title "$prompt_title"
+		end tell
+	on error number -128
+        set userCanceled to true
+    end
+    if userCanceled then
+        -- statements to execute when user cancels
+        set userCanceled to true
+    else
+        set userCanceled to false
+    end if
+EOT
+    )
+    if [ "$our_value" == "false" ]; then
+        echo "false"
+    else
+        echo "true"
+    fi
+}
+
+info_prompt () {
+#   popup a text entry box
+#   $1 Dialog text
+#   $2 Default anser
+#   $3 Dialog Title
+    our_value=$(osascript <<EOT
+    set userCanceled to false
+    set dialogResult to ""
+    set dialogResult to display dialog ¬
+        "$1" buttons {"OK"} ¬
+        with title "$prompt_title" ¬
+        default button "OK" ¬
+        giving up after 15 ¬
+        default answer ("")
+EOT
+)
+    echo "<$our_value>" | split
+
+}
+
+info_notification () {
+    #  simple notification box
+    osascript <<END
+        display notification "$1" with title "$prompt_title"
+END
+
+}
 
 
 # some are os dependent this is location of log4sh
